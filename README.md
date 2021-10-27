@@ -5,7 +5,9 @@
 The Mastodon server is implemented a rails app, which relies on postgres and redis. It uses sidekiq for background jobs, along with a separate nodejs http streaming server.
 
 Docker images: https://hub.docker.com/r/tootsuite/mastodon/
+
 Dockerfile: https://github.com/mastodon/mastodon/blob/main/Dockerfile
+
 docker-compose.yml: https://github.com/mastodon/mastodon/blob/main/docker-compose.yml
 
 ### Setup
