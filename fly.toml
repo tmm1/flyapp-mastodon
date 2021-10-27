@@ -17,14 +17,14 @@ kill_timeout = 5
   destination = "/opt/mastodon/public/system"
 
 [processes]
-  rails = "bundle exec rails s -p 3000"
+  rails = "bundle exec rails s -p 8080"
 
 [[statics]]
   guest_path = "/opt/mastodon/public"
   url_prefix = "/"
 
 [[services]]
-  internal_port = 3000
+  internal_port = 8080
   processes = ["rails"]
   protocol = "tcp"
 
