@@ -7,13 +7,18 @@ kill_timeout = 5
   LOCAL_DOMAIN = "mastodon.example.com"
   DB_HOST = "mastodon-db.internal"
   DB_USER = "postgres"
+  REDIS_HOST = "mastodon-redis.internal"
+  REDIS_PORT = "6379"
+  # S3_ENABLED=true
+  # S3_BUCKET=files.example.com
+  # S3_ALIAS_HOST=files.example.com
 
 [mounts]
-  source = "mastodon_data"
+  source = "mastodon_uploads"
   destination = "/opt/mastodon/public/system"
 
 [processes]
-  app = "env REDIS_URL=$FLY_REDIS_CACHE_URL bundle exec rails s -p 3000"
+  rails = "bundle exec rails s -p 3000"
 
 [[statics]]
   guest_path = "/opt/mastodon/public"
@@ -21,7 +26,7 @@ kill_timeout = 5
 
 [[services]]
   internal_port = 3000
-  processes = ["app"]
+  processes = ["rails"]
   protocol = "tcp"
 
   [[services.ports]]

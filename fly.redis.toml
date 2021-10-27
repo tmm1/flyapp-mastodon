@@ -1,0 +1,5 @@
+app = "mastodon-redis"
+
+[[mounts]]
+  source = "mastodon_redis"
+  destination = "/data"
