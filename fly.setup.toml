@@ -5,5 +5,3 @@ app = "mastodon"
 
 [env]
   RAILS_ENV = "production"
-  DB_HOST = "mastodon-db.internal"
-  DB_USER = "postgres"

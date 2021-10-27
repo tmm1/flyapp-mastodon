@@ -6,8 +6,6 @@ kill_timeout = 5
 [env]
   LOCAL_DOMAIN = "mastodon.fly.dev"
   RAILS_ENV = "production"
-  DB_HOST = "mastodon-db.internal"
-  DB_USER = "postgres"
   REDIS_HOST = "mastodon-redis.internal"
   REDIS_PORT = "6379"
   # S3_ENABLED=true

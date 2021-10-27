@@ -60,8 +60,8 @@ See [lib/tasks/mastodon.rake](https://github.com/mastodon/mastodon/blob/5ba46952
 #### Postgres database
 
 ```
-$ fly pg create --region iad --name mastodon-db
-$ fly secrets set DB_PASS=xxxx # password from output above
+$ fly pg create --region iad --name mastodon-pg
+$ fly pg attach --postgres-app mastodon-pg
 $ fly deploy -c fly.setup.toml # run `rails db:setup`
 ```
 
