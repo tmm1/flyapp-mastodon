@@ -15,7 +15,7 @@ docker-compose.yml: https://github.com/mastodon/mastodon/blob/main/docker-compos
 #### App
 
 ```
-$ fly apps create --name mastodon
+$ fly apps create --region iad --name mastodon
 ```
 
 #### Postgres database
@@ -30,7 +30,7 @@ $ fly secrets set DB_PASS=xxxx # password from output above
 Redis is used to store the home/list feeds, along with the sidekiq queue information. The feeds can be regenerated using `tootctl`, so persistence is [not strictly necessary](https://docs.joinmastodon.org/admin/backups/#failure).
 
 ```
-$ fly apps create --name mastodon-redis
+$ fly apps create --region iad --name mastodon-redis
 $ fly volumes create -c fly.redis.toml --region iad mastodon_redis
 $ fly deploy --config fly.redis.toml --build-target redis-server
 ```
