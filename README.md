@@ -16,6 +16,7 @@ docker-compose.yml: https://github.com/mastodon/mastodon/blob/main/docker-compos
 
 ```
 $ fly apps create --region iad --name mastodon
+$ fly scale memory 512 # rails needs more than 256mb
 ```
 
 #### Secrets

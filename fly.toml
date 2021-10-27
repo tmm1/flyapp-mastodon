@@ -6,6 +6,8 @@ kill_timeout = 5
 [env]
   LOCAL_DOMAIN = "mastodon.fly.dev"
   RAILS_ENV = "production"
+  RAILS_LOG_TO_STDOUT = "enabled"
+  WEB_CONCURRENCY = "1"
   REDIS_HOST = "mastodon-redis.internal"
   REDIS_PORT = "6379"
   # S3_ENABLED=true
