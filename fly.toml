@@ -20,6 +20,7 @@ kill_timeout = 5
 
 [processes]
   rails = "bundle exec rails s -p 8080"
+  sidekiq = "bundle exec sidekiq"
 
 [[statics]]
   guest_path = "/opt/mastodon/public"
