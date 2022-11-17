@@ -3,6 +3,9 @@ app = "mastodon"
 kill_signal = "SIGINT"
 kill_timeout = 5
 
+[deploy]
+  release_command = "bin/rails db:migrate"
+
 [env]
   LOCAL_DOMAIN = "mastodon.fly.dev"
   RAILS_ENV = "production"
