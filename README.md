@@ -85,7 +85,7 @@ $ fly deploy
 ### Custom domain (optional)
 
 1. Edit `fly.toml` and set `LOCAL_DOMAIN` to your custom domain.
-2. Run `fly ips list`, and if the list is empty, run `fly ips allocate-v4`. 
+2. Run `fly ips list`, and if the list is empty, run `fly ips allocate-v4`.
 3. Then, create DNS records for your custom domain.
 
     If your DNS host supports ALIAS records:
@@ -108,3 +108,24 @@ $ fly deploy
     $ fly certs add MYDOMAIN.COM
     $ fly certs add WWW.MYDOMAIN.COM
     ```
+
+### Upgrading Mastodon
+
+To upgrade to a new version of Mastodon, change the version number on the first line of `Dockerfile`, and then check the release notes for upgrade instructions.
+
+If there are migrations that must be run before deploying to avoid downtime, you can run the pre-deploy migrations using a temporary second app, like this:
+
+```
+$ fly apps create mastodon-example-predeploy
+$ bin/fly-predeploy secrets set OTP_SECRET=placeholder SECRET_KEY_BASE=abc
+$ bin/fly-predeploy secrets set $(fly ssh console -C env | grep DATABASE_URL)
+$ bin/fly-predeploy scale memory 1024
+$ bin/fly-predeploy deploy
+$ fly apps destroy mastodon-example-predeploy
+```
+
+After that, just deploy the updated container as usual, and the post-deploy migrations will run in the release command:
+
+```
+$ fly deploy
+```
