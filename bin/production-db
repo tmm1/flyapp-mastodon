@@ -1,0 +1,2 @@
+#!/bin/sh
+FLY_APP=mastodon-db exec "fly" -c fly.db.toml "$@"
