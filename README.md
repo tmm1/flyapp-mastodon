@@ -71,3 +71,30 @@ $ fly deploy -c fly.setup.toml # run `rails db:schema:load`, may take 2-3 minute
 ```
 $ fly deploy
 ```
+
+### Custom domain (optional)
+
+1. Edit `fly.toml` and set `LOCAL_DOMAIN` to your custom domain.
+2. Run `fly ips list`, and if the list is empty, run `fly ips allocate-v4`. 
+3. Then, create DNS records for your custom domain.
+
+    If your DNS host supports ALIAS records:
+
+    ```
+    @   ALIAS mastodon-example.fly.dev
+    www CNAME mastodon-example.fly.dev
+    ```
+
+    If your DNS host only allows A records, use the IP. For example, if your IP was `3.3.3.3`:
+
+    ```
+    @   A     3.3.3.3
+    www CNAME @
+    ```
+
+4. Finally, generate SSL certificates from Let's Encrypt:
+
+    ```
+    $ fly certs add MYDOMAIN.COM
+    $ fly certs add WWW.MYDOMAIN.COM
+    ```
