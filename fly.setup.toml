@@ -1,4 +1,4 @@
-app = "mastodon"
+app = "mastodon-example"
 
 [deploy]
   release_command = "bundle exec rails db:setup"
