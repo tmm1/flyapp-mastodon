@@ -14,9 +14,17 @@ kill_timeout = 5
   WEB_CONCURRENCY = "1"
   REDIS_HOST = "mastodon-redis.internal"
   REDIS_PORT = "6379"
+  ## Storage on S3 also requires secrets named
+  ## AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
   # S3_ENABLED=true
   # S3_BUCKET=files.example.com
   # S3_ALIAS_HOST=files.example.com
+  ## Sending email via SMTP also requires secrets
+  ## named SMTP_LOGIN and SMTP_PASSWORD
+  # SMTP_SERVER = "smtp.postmarkapp.com"
+  # SMTP_PORT = "587"
+  # SMTP_ENABLE_STARTTLS = "always"
+  # SMTP_FROM_ADDRESS = "admin@mastodon.fly.dev"
 
 [mounts]
   processes = ["rails"]
