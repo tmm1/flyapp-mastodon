@@ -14,6 +14,8 @@ docker-compose.yml: https://github.com/mastodon/mastodon/blob/main/docker-compos
 
 #### App
 
+Fork this repo and clone a copy of it. Choose a name for your app that isn't already taken on Fly, and run the script `bin/name YOURNAME`. Follow this readme from inside your repo, after you have run the script, so that all of the steps will be updated for the name of your Fly app.
+
 ```
 $ fly apps create mastodon-example
 $ fly scale memory 1024 # Rails + Sidekiq needs more than 512
