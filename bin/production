@@ -1,0 +1,2 @@
+#!/bin/sh
+FLY_APP=mastodon exec "fly" -c fly.toml "$@"
