@@ -27,13 +27,8 @@ kill_timeout = 5
   # SMTP_FROM_ADDRESS = "admin@mastodon.fly.dev"
 
 [mounts]
-  processes = ["rails"]
   source = "mastodon_uploads"
   destination = "/opt/mastodon/public/system"
-
-[processes]
-  rails = "bundle exec rails s -p 8080"
-  sidekiq = "bundle exec sidekiq"
 
 [[statics]]
   guest_path = "/opt/mastodon/public"
@@ -41,7 +36,6 @@ kill_timeout = 5
 
 [[services]]
   internal_port = 8080
-  processes = ["rails"]
   protocol = "tcp"
 
   [[services.ports]]
