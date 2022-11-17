@@ -1,7 +1,8 @@
 app = "mastodon-example"
 
 [deploy]
-  release_command = "bundle exec rails db:setup"
+  release_command = "bundle exec rails db:schema:load"
 
 [env]
   RAILS_ENV = "production"
+  DISABLE_DATABASE_ENVIRONMENT_CHECK = "1"
