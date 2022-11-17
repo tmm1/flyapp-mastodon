@@ -1,3 +1,3 @@
+FROM tootsuite/mastodon:v4.0.1
 
-FROM tootsuite/mastodon:v3.4.1
 ENTRYPOINT []
