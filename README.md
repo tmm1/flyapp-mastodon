@@ -15,8 +15,8 @@ docker-compose.yml: https://github.com/mastodon/mastodon/blob/main/docker-compos
 #### App
 
 ```
-$ fly apps create --region iad --name mastodon
-$ fly scale memory 512 # rails needs more than 256mb
+$ fly apps create mastodon-example
+$ fly scale memory 1024 # Rails + Sidekiq needs more than 512
 ```
 
 #### Secrets
@@ -33,9 +33,9 @@ $ docker run --rm -e OTP_SECRET=$OTP_SECRET -e SECRET_KEY_BASE=$SECRET_KEY_BASE 
 Redis is used to store the home/list feeds, along with the sidekiq queue information. The feeds can be regenerated using `tootctl`, so persistence is [not strictly necessary](https://docs.joinmastodon.org/admin/backups/#failure).
 
 ```
-$ fly apps create --region iad --name mastodon-redis
-$ fly volumes create -c fly.redis.toml --region iad mastodon_redis
-$ fly deploy --config fly.redis.toml --build-target redis-server
+$ fly apps create mastodon-example-redis
+$ bin/fly-redis volumes create --region sjc --size 1 mastodon_redis
+$ bin/fly-redis deploy
 ```
 
 #### Storage (user uploaded photos and videos)
@@ -47,7 +47,7 @@ Create that volume below, or remove the `[mounts]` section and uncomment `[env] 
 ##### Option 1: Local volume
 
 ```
-$ fly volumes create --region iad mastodon_uploads
+$ fly volumes create --region sjc mastodon_uploads
 ```
 
 ##### Option 2: S3, etc
@@ -61,9 +61,9 @@ See [lib/tasks/mastodon.rake](https://github.com/mastodon/mastodon/blob/5ba46952
 #### Postgres database
 
 ```
-$ fly pg create --region iad --name mastodon-pg
-$ fly pg attach --postgres-app mastodon-pg
-$ fly deploy -c fly.setup.toml # run `rails db:setup`
+$ fly pg create --region sjc --name mastodon-example-db
+$ fly pg attach mastodon-example-db
+$ fly deploy -c fly.setup.toml # run `rails db:schema:load`, may take 2-3 minutes
 ```
 
 ### Deploy
