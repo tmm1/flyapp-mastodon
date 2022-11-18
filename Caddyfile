@@ -1,0 +1,4 @@
+:8080
+
+reverse_proxy :3000
+reverse_proxy /api/v1/streaming :4000
