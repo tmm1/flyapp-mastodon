@@ -76,12 +76,6 @@ Mastodon sends emails on signup, to confirm email addresses. It also uses emails
 $ fly secrets set SMTP_LOGIN=<public token> SMTP_PASSWORD=<secret token>
 ```
 
-### Deploy
-
-```
-$ fly deploy
-```
-
 ### Custom domain (optional)
 
 1. Edit `fly.toml` and set `LOCAL_DOMAIN` to your custom domain.
@@ -108,6 +102,12 @@ $ fly deploy
     $ fly certs add MYDOMAIN.COM
     $ fly certs add WWW.MYDOMAIN.COM
     ```
+
+### Deploy
+
+```
+$ fly deploy
+```
 
 ### Upgrading Mastodon
 
