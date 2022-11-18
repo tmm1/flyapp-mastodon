@@ -113,18 +113,18 @@ $ fly deploy
 
 To upgrade to a new version of Mastodon, change the version number on the first line of `Dockerfile`, and then check the release notes for upgrade instructions.
 
-If there are migrations that must be run before deploying to avoid downtime, you can run the pre-deploy migrations using a temporary second app, like this:
+If there are migrations that must be run before deploying to avoid downtime, you can run the pre-deploy migrations using a second app. By scaling this app to a VM count of zero, it won't add to our bill, but it will let us run the pre-deploy migrations as a release command before the web processes get the new code.
 
 ```
 $ fly apps create mastodon-example-predeploy
 $ bin/fly-predeploy secrets set OTP_SECRET=placeholder SECRET_KEY_BASE=abc
 $ bin/fly-predeploy secrets set $(fly ssh console -C env | grep DATABASE_URL)
 $ bin/fly-predeploy scale memory 1024
+$ bin/fly-predeploy scale count 0
 $ bin/fly-predeploy deploy
-$ fly apps destroy mastodon-example-predeploy
 ```
 
-After that, just deploy the updated container as usual, and the post-deploy migrations will run in the release command:
+After that, just deploy the updated container as usual, and the post-deploy migrations will run in the regular release command:
 
 ```
 $ fly deploy

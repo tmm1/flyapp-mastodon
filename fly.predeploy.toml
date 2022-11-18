@@ -1,5 +1,9 @@
 app = "mastodon-example-predeploy"
 
+[experimental]
+  # Just in case the VM does somehow start, don't try to run a server
+  cmd = ["sleep", "1000"]
+
 [deploy]
   release_command = "bin/rails db:migrate"
 
