@@ -163,38 +163,29 @@ If you need more web processes, or more sidekiq workers, the easiest option is t
 
 For example, if you upgrade to `dedicated-cpu-4x`, you might set `WEB_CONCURRENCY=2` and `OVERMIND_FORMATION=sidekiq=2` in `fly.toml`.
 
-At that point, you'll have two Puma processes and two Sidekiq processes, running 5 threads each. If your CPUs aren't fully utilized yet, you can increase the threads on each CPU by setting `MAX_THREADS=25` and editing the Sidekiq line in the procfile to change `-c 5` to `-c 25` instead. Adjust up or down until your CPUs are as utilized as you'd like them to be.
+At that point, you'll have two Puma processes and two Sidekiq processes, running 5 threads each. If your CPUs aren't fully utilized yet, you can increase the threads for each single-CPU process by setting `MAX_THREADS`. Adjust up or down until your CPUs are as utilized as you'd like them to be.
 
-##### Adding many VMs
+##### Adding more VMs
 
-If you need to scale beyond the largest Fly VM (8 CPU cores and 16GB, at the time of writing), or you just want to run a bigger number of smaller VMs, you can do that.
+If you need to scale beyond the largest Fly VM (8 CPU cores and 16GB, at the time of writing), or you just want to run a bigger number of smaller VMs, you can also do that. We're going to split up responsibilities, creating one type of VM that runs the Sidekiq scheduler process, another type of VM that runs Sidekiq workers for all the other background jobs, and a third type of VM that runs the Rails, Node, and Caddy servers. You'll be able to tell Fly how many of each VM you want, separately.
 
-**Caveat: to have more than one VM, you _must_ be using [cloud storage](#cloud-storage) instead of Fly volumes.**
+**Caveats:**
 
-1. Create a separate app to scale Sidekiq VMs:
+1. **You _must_ already be using [cloud storage](#cloud-storage) instead of Fly volumes.**
+1. **To undo this change you have to destroy your Fly app and recreate it.**
+
+Ready? Okay, let's do it:
+
+1. Convert your application to multiple-VM mode by uncommenting the `[processes]` section in `fly.toml`.
+1. Scale memory so everything can run successfully.
     ```
-    $ fly apps create mastodon-example-sidekiq
-    ```
-1. Make sure to copy any config env vars for e.g. S3 and SMTP from `fly.toml` to `fly.sidekiq.toml`.
-1. Make sure to copy any secrets for e.g. S3 and SMTP from `fly secrets` to `bin/fly-sidekiq secrets`.
-    ```
-    $ bin/fly-sidekiq secrets set OTP_SECRET=placeholder SECRET_KEY_BASE=placeholder
-    $ bin/fly-sidekiq secrets set $(fly ssh console -C env | grep DATABASE_URL)
-    $ bin/fly-sidekiq secrets set $(fly ssh console -C env | grep YOUR_SECRET_HERE)
-    ```
-1. Deploy the Sidekiq app
-    ```
-    $ bin/fly-sidekiq scale memory 512 # a single sidekiq with 5 threads uses about 400MB
-    $ bin/fly-sidekiq scale count 3 # or your desired number of Sidekiq VMs
-    $ bin/fly-sidekiq deploy
-    ```
-1. Remove Sidekiq from your main VMs by setting `OVERMIND_FORMATION = "sidekiq=0"` in `fly.toml`.
-    ```
-    $ fly scale memory 512 # a single puma process + node uses about 430MB
-    $ fly scale count 3 # or your desired number of web VMs
+    $ fly scale memory 512 --group sidekiq  # a single sidekiq with 5 threads uses about 400MB
+    $ fly scale memory 512 --group schedule # a single sidekiq with 5 threads uses about 400MB
+    $ fly scale memory 512 --group rails    # rails with 5 threads plus node uses about 430MB
+    $ fly scale count schedule=1 rails=2 sidekiq=2 # or your desired number of VMs
     $ fly deploy
     ```
 
-Don't forget to adjust the number of Puma and Sidekiq threads, as described in [A bigger VM](#bigger-vm) above, to match your CPU and memory settings!
+Increase the number of `rails` or `sidekiq` processes by running `fly scale count rails=N` or `fly scale count sidekiq=N` as needed. Don't forget to also adjust the number of Puma and Sidekiq threads, as described in [A bigger VM](#bigger-vm) above, to match your CPU and memory settings!
 
 Finally, make sure that your Postgres is big enough to successfully handle one connection for every thread in Pumo or Sidekiq across all VMs. If your postgres is unable to accept more connections, you might need to increase the CPU or memory on your Postgres VM(s), or you might need to add pg_bouncer to act as a connection proxy and reduce the number of open connections directly to the database.
