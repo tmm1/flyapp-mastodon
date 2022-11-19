@@ -16,8 +16,8 @@ kill_timeout = 5
   WEB_CONCURRENCY = "0"
   REDIS_HOST = "mastodon-example-redis.internal"
   REDIS_PORT = "6379"
-  ## Storage on S3 also requires secrets named
-  ## AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
+  ## Storage on S3 also requires secrets named AWS_ACCESS_KEY_ID and 
+  ## AWS_SECRET_ACCESS_KEY. If you use this, remove [mounts] below.
   # S3_ENABLED=true
   # S3_BUCKET=mastodon-example-bucket
   ## If you point to Fly here, uncomment the proxy in Caddyfile
@@ -29,6 +29,7 @@ kill_timeout = 5
   # SMTP_ENABLE_STARTTLS = "always"
   # SMTP_FROM_ADDRESS = "admin@mastodon.fly.dev"
 
+## Comment out this section if you use cloud storage
 [mounts]
   source = "mastodon_uploads"
   destination = "/opt/mastodon/public/system"
