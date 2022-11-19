@@ -1,5 +1,5 @@
-app = "mastodon-redis"
+app = "mastodon-redis" # You'll need to change this, as it is likely a taken app name (and thus already exists as a subdomain of fly.dev)
 
 [[mounts]]
-  source = "mastodon_redis"
+  source = "mastodon_redis" #change this to match above, with underscores replacing hyphens.
   destination = "/data"

@@ -1,7 +1,0 @@
-app = "mastodon"
-
-[deploy]
-  release_command = "bundle exec rails db:setup"
-
-[env]
-  RAILS_ENV = "production"

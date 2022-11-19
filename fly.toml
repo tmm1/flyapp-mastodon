@@ -1,45 +1,71 @@
-app = "mastodon"
+app = "mastodon" # You'll need to change this, as it is likely a taken app name (and thus already exists as a subdomain of fly.dev)
 
 kill_signal = "SIGINT"
 kill_timeout = 5
 
+# !!!VERY IMPORTANT READ COMMENTS BELOW!!!
+# Uncomment one of the below [deploy] sections to run necessary "one-off" commands.
+
+# This command is used on first deploy, do not run it on subsequent deploys.
+# [deploy]
+#   release_command = "bundle exec rails db:setup"
+
+# This can be used to set yourself as an admin account after the first deploy. 
+# You should already have signed yourself up as a user, with a confirmed email, 2FA, and password. 
+# It should only need to be uncommented and ran once.
+# [deploy]
+#   release_command = "tootctl accounts modify yourusernamehere --role admin"
+
+# This command was used during upgrades of mastodon versions, likely changes for each release.
+# See: https://github.com/mastodon/mastodon/releases/tag/v4.0.0
+# [deploy] 
+#   release_command = "bundle exec rails db:migrate"
+
 [env]
-  LOCAL_DOMAIN = "mastodon.fly.dev"
+# Refer to https://docs.joinmastodon.org/admin/config/ for further information
+  LOCAL_DOMAIN = "domain.tld" # Cannot be changed after deploy, you're stuck with what you put here.
+  LOCAL_HTTPS="true"
   RAILS_ENV = "production"
   RAILS_LOG_TO_STDOUT = "enabled"
   WEB_CONCURRENCY = "1"
-  REDIS_HOST = "mastodon-redis.internal"
+  REDIS_HOST = "mastodon-redis.internal" # Needs changing, refer to [fly.redis.toml](fly.redis.toml)
   REDIS_PORT = "6379"
-  # S3_ENABLED=true
-  # S3_BUCKET=files.example.com
-  # S3_ALIAS_HOST=files.example.com
+  S3_ENABLED="true"
+  S3_BUCKET="bucketname" # Modify as needed
+  S3_ENDPOINT="https://<ACCOUNT_ID>.r2.cloudflarestorage.com" # Needs changing: https://developers.cloudflare.com/r2/data-access/s3-api/tokens/
+  S3_ALIAS_HOST="files.domain.tld"
+  S3_PERMISSION="private"
+  S3_PROTOCOL="https"
+  S3_REGION="us-east-1" # https://github.com/mastodon/mastodon/issues/20416#issuecomment-1312454331
+  SMTP_SERVER="smtp.sendgrid.net"
+  SMTP_PORT="587"
+  SMTP_LOGIN="apikey"
+  SMTP_FROM_ADDRESS="mastodon@domain.tld"
 
-[mounts]
-  processes = ["rails"]
-  source = "mastodon_uploads"
-  destination = "/opt/mastodon/public/system"
+# uncomment this section if you are not using an S3-like object storage service.
+# [mounts]
+#   processes = ["rails"]
+#   source = "mastodon_uploads"
+#   destination = "/opt/mastodon/public/system"
 
 [processes]
-  rails = "bundle exec rails s -p 8080"
+  rails = "bundle exec rails s -p 3000"
   sidekiq = "bundle exec sidekiq"
+  streaming = "node ./streaming" # requires a hack, noted below.
 
 [[statics]]
   guest_path = "/opt/mastodon/public"
   url_prefix = "/"
 
 [[services]]
-  internal_port = 8080
+  internal_port = 3000
   processes = ["rails"]
   protocol = "tcp"
 
   [[services.ports]]
-    handlers = ["http"]
-    port = 80
-
-  [[services.ports]]
     handlers = ["tls", "http"]
     port = 443
-
+  
   [[services.tcp_checks]]
     grace_period = "1s"
     interval = "15s"
@@ -48,6 +74,22 @@ kill_timeout = 5
 
   [[services.http_checks]]
     path = "/health"
+    grace_period = "1s"
+    interval = "15s"
+    restart_limit = 0
+    timeout = "2s"
+
+[[services]]
+internal_port = 4000
+  processes = ["streaming"]
+  protocol = "tcp"
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 80 # This is a hack.
+
+  [[services.http_checks]]
+    path = "/api/v1/streaming/health"
     grace_period = "1s"
     interval = "15s"
     restart_limit = 0
