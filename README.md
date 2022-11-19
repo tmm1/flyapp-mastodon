@@ -125,7 +125,9 @@ Enjoy your server.
 
 If you still haven't gotten enough, here are some notes on how to operate your instance after it's running.
 
-Useful references for the section include `fly scale show`, 
+Useful resources for operating and debugging a running instance include `fly logs`, `fly scale show`, `fly ssh console`, the Metrics section of `fly dashboard`, and the Sidekiq dashboard at https://mastodon-example.fly.dev/sidekiq (you have to be logged in to Mastodon as an admin user to see it).
+
+If your instance is getting slow or falling over, you may find [Scaling Mastodon in the Face of an Exodus](https://nora.codes/post/scaling-mastodon-in-the-face-of-an-exodus/) helpful.
 
 #### Upgrading Mastodon
 
