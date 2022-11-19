@@ -70,7 +70,7 @@ $ fly pg attach mastodon-example-db
 $ fly deploy -c fly.setup.toml # run `rails db:schema:load`, may take 2-3 minutes
 ```
 
-### Sending email
+#### Sending email
 
 Mastodon sends emails on signup, to confirm email addresses. It also uses emails for password resets, notifications to the server admins, and various other tasks. To have a fully-functioning Mastodon server, you'll need to create an account with an email service like [Postmark](https://postmarkapp.com), get credentials, and provide those credentials to Mastodon as env vars or secrets. See `fly.toml` for an example of the env vars you would set, and then provide your credentials as Fly secrets:
 
@@ -78,7 +78,7 @@ Mastodon sends emails on signup, to confirm email addresses. It also uses emails
 $ fly secrets set SMTP_LOGIN=<public token> SMTP_PASSWORD=<secret token>
 ```
 
-### Custom domain (optional)
+#### Custom domain (optional)
 
 1. Edit `fly.toml` and set `LOCAL_DOMAIN` to your custom domain.
 2. Run `fly ips list`, and if the list is empty, run `fly ips allocate-v4`.
@@ -111,7 +111,7 @@ $ fly secrets set SMTP_LOGIN=<public token> SMTP_PASSWORD=<secret token>
 $ fly deploy
 ```
 
-### Make yourself an instance admin
+#### Make yourself an instance admin
 
 After you've deployed, sign up. You will hopefully get an email, but if you don't, we'll manually confirm your account regardless as part of making you an owner on the instance. Substitute your own username in this command:
 
@@ -121,9 +121,16 @@ $ fly ssh console -C 'tootctl accounts modify <username> --confirm --role Owner'
 
 ## You're done!
 
-Here are some notes on operating your instance in the future:
+Enjoy your server.
 
-### Upgrading Mastodon
+
+### Operating your instance
+
+If you still haven't gotten enough, here are some notes on how to operate your instance after it's running.
+
+Useful references for the section include `fly scale show`, 
+
+#### Upgrading Mastodon
 
 To upgrade to a new version of Mastodon, change the version number on the first line of `Dockerfile`, and then check the release notes for upgrade instructions.
 
@@ -146,11 +153,11 @@ After that, just deploy the updated container as usual, and the post-deploy migr
 $ fly deploy
 ```
 
-### Scaling your instance
+#### Scaling your instance
 
 If your instance attracts many users (or maybe a few users who follow a huge number of other accounts), you may notice things start to slow down, and you may run out of database, redis, or storage space.
 
-#### A bigger VM
+##### A bigger VM
 
 If you need more web processes, or more sidekiq workers, the easiest option is to choose a larger Fly VM size via `fly scale vm`. With a larger VM, you can run more Puma processes by setting `WEB_CONCURRENCY`, and you can run more sidekiq processes by adding lines to your Procfile. Try to aim for about as many Puma+Sidekiq processes as you have cores, and review the CPU usage of your VM to know whether to adjust up or down.
 
