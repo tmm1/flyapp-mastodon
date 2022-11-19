@@ -145,3 +145,15 @@ After that, just deploy the updated container as usual, and the post-deploy migr
 ```
 $ fly deploy
 ```
+
+### Scaling your instance
+
+If your instance attracts many users (or maybe a few users who follow a huge number of other accounts), you may notice things start to slow down, and you may run out of database, redis, or storage space.
+
+#### A bigger VM
+
+If you need more web processes, or more sidekiq workers, the easiest option is to choose a larger Fly VM size via `fly scale vm`. With a larger VM, you can run more Puma processes by setting `WEB_CONCURRENCY`, and you can run more sidekiq processes by adding lines to your Procfile. Try to aim for about as many Puma+Sidekiq processes as you have cores, and review the CPU usage of your VM to know whether to adjust up or down.
+
+For example, if you upgrade to `dedicated-cpu-4x`, you might set `WEB_CONCURRENCY=2`, and uncomment the lines for `sidekiq1` and `sidekiq2` in the `Procfile`.
+
+At that point, you'll have two Puma processes and two Sidekiq processes, running 5 threads each. If your CPUs aren't fully utilized yet, you can run 25 threads on each CPU by setting `MAX_THREADS=25` and editing the Sidekiq lines in the procfile to change `5` to `25` instead. Adjust up or down until your CPUs are 80-95% used.
