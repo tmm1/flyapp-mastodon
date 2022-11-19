@@ -1,4 +1,14 @@
 :8080
 
+## (Optional) Proxy to your cloud image host, if you have one
+# @assets {
+# 	path /cache/*
+# 	path /accounts/*
+# 	path /media_attachments/*
+# }
+# reverse_proxy @assets https://s3.us-west-1.amazonaws.com {
+#   header_up Host "mastodon-example-bucket"
+# }
+
 reverse_proxy :3000
 reverse_proxy /api/v1/streaming :4000

@@ -18,8 +18,9 @@ kill_timeout = 5
   ## Storage on S3 also requires secrets named
   ## AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
   # S3_ENABLED=true
-  # S3_BUCKET=files.example.com
-  # S3_ALIAS_HOST=files.example.com
+  # S3_BUCKET=mastodon-example-bucket
+  ## If you point to Fly here, uncomment the proxy in Caddyfile
+  # S3_ALIAS_HOST=mastodon-example.fly.dev
   ## Sending email via SMTP also requires secrets
   ## named SMTP_LOGIN and SMTP_PASSWORD
   # SMTP_SERVER = "smtp.postmarkapp.com"

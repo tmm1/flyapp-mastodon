@@ -117,7 +117,7 @@ If there are migrations that must be run before deploying to avoid downtime, you
 
 ```
 $ fly apps create mastodon-example-predeploy
-$ bin/fly-predeploy secrets set OTP_SECRET=placeholder SECRET_KEY_BASE=abc
+$ bin/fly-predeploy secrets set OTP_SECRET=placeholder SECRET_KEY_BASE=placeholder
 $ bin/fly-predeploy secrets set $(fly ssh console -C env | grep DATABASE_URL)
 $ bin/fly-predeploy scale memory 1024
 $ bin/fly-predeploy scale count 0
