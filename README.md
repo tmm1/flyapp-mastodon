@@ -111,6 +111,18 @@ $ fly secrets set SMTP_LOGIN=<public token> SMTP_PASSWORD=<secret token>
 $ fly deploy
 ```
 
+### Make yourself an instance admin
+
+After you've deployed, sign up. You will hopefully get an email, but if you don't, we'll manually confirm your account regardless as part of making you an owner on the instance. Substitute your own username in this command:
+
+```
+$ fly ssh console -C 'tootctl accounts modify <username> --confirm --role Owner'
+```
+
+## You're done!
+
+Here are some notes on operating your instance in the future:
+
 ### Upgrading Mastodon
 
 To upgrade to a new version of Mastodon, change the version number on the first line of `Dockerfile`, and then check the release notes for upgrade instructions.
