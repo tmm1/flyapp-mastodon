@@ -58,7 +58,9 @@ $ fly volumes create --region sjc mastodon_uploads
 $ fly secrets set AWS_ACCESS_KEY_ID=xxx AWS_SECRET_ACCESS_KEY=yyy
 ```
 
-See [lib/tasks/mastodon.rake](https://github.com/mastodon/mastodon/blob/5ba46952af87e42a64962a34f7ec43bc710bdcaf/lib/tasks/mastodon.rake#L137) for how to change your `[env]` section for Wasabi, Minio or Google Cloud Storage.
+Uncomment the section in `fly.io` to configure S3 or Wasabi.  See [mastodon.rake](https://github.com/mastodon/mastodon/blob/5ba46952af87e42a64962a34f7ec43bc710bdcaf/lib/tasks/mastodon.rake#L137) for the env vars needed for Minio or Google Cloud Storage.
+
+To serve cloud-stored images directly from your domain, set `S3_ALIAS_HOST` in `fly.toml` and then uncomment the section at the top of `Caddyfile`.
 
 #### Postgres database
 
