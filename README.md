@@ -115,6 +115,8 @@ $ fly deploy
 
 To upgrade to a new version of Mastodon, change the version number on the first line of `Dockerfile`, and then check the release notes for upgrade instructions.
 
+If there are migrations that need to be run, make sure that the release command in `fly.toml` is uncommented.
+
 If there are migrations that must be run before deploying to avoid downtime, you can run the pre-deploy migrations using a second app. By scaling this app to a VM count of zero, it won't add to our bill, but it will let us run the pre-deploy migrations as a release command before the web processes get the new code.
 
 ```
