@@ -4,11 +4,7 @@
 
 The Mastodon server is implemented a rails app, which relies on postgres and redis. It uses sidekiq for background jobs, along with a separate nodejs http streaming server.
 
-Docker images: https://hub.docker.com/r/tootsuite/mastodon/
-
-Dockerfile: https://github.com/mastodon/mastodon/blob/main/Dockerfile
-
-docker-compose.yml: https://github.com/mastodon/mastodon/blob/main/docker-compose.yml
+While following this guide, you may find it helpful to also view the [Mastodon docker image list](https://hub.docker.com/r/tootsuite/mastodon/), the [Mastodon Dockerfile](https://github.com/mastodon/mastodon/blob/main/Dockerfile), or the [Mastodon docker-compose.yml](https://github.com/mastodon/mastodon/blob/main/docker-compose.yml).
 
 ### Setup
 
@@ -53,6 +49,7 @@ $ fly volumes create --region sjc mastodon_uploads
 ```
 
 ##### Option 2: S3, etc
+<a id="cloud-storage"></a>
 
 ```
 $ fly secrets set AWS_ACCESS_KEY_ID=xxx AWS_SECRET_ACCESS_KEY=yyy
@@ -158,9 +155,44 @@ $ fly deploy
 If your instance attracts many users (or maybe a few users who follow a huge number of other accounts), you may notice things start to slow down, and you may run out of database, redis, or storage space.
 
 ##### A bigger VM
+<a id="bigger-vm"></a>
 
 If you need more web processes, or more sidekiq workers, the easiest option is to choose a larger Fly VM size via `fly scale vm`. With a larger VM, you can run more Puma processes by setting `WEB_CONCURRENCY`, and you can run more sidekiq processes by setting `OVERMIND_FORMATION`. Try to aim for about as many Puma+Sidekiq processes as you have cores, and review the CPU usage of your VM to know whether to adjust up or down.
 
 For example, if you upgrade to `dedicated-cpu-4x`, you might set `WEB_CONCURRENCY=2` and `OVERMIND_FORMATION=sidekiq=2` in `fly.toml`.
 
 At that point, you'll have two Puma processes and two Sidekiq processes, running 5 threads each. If your CPUs aren't fully utilized yet, you can increase the threads on each CPU by setting `MAX_THREADS=25` and editing the Sidekiq line in the procfile to change `-c 5` to `-c 25` instead. Adjust up or down until your CPUs are as utilized as you'd like them to be.
+
+##### Adding many VMs
+
+If you need to scale beyond the largest Fly VM (8 CPU cores and 16GB, at the time of writing), or you just want to run a bigger number of smaller VMs, you can do that.
+
+**Caveat: to have more than one VM, you _must_ be using [cloud storage](#cloud-storage) instead of Fly volumes.**
+
+1. Create a separate app to scale Sidekiq VMs:
+    ```
+    $ fly apps create mastodon-example-sidekiq
+    ```
+1. Make sure to copy any config env vars for e.g. S3 and SMTP from `fly.toml` to `fly.sidekiq.toml`.
+1. Make sure to copy any secrets for e.g. S3 and SMTP from `fly secrets` to `bin/fly-sidekiq secrets`.
+    ```
+    $ bin/fly-sidekiq secrets set OTP_SECRET=placeholder SECRET_KEY_BASE=placeholder
+    $ bin/fly-sidekiq secrets set $(fly ssh console -C env | grep DATABASE_URL)
+    $ bin/fly-sidekiq secrets set $(fly ssh console -C env | grep YOUR_SECRET_HERE)
+    ```
+1. Deploy the Sidekiq app
+    ```
+    $ bin/fly-sidekiq scale memory 512 # a single sidekiq with 5 threads uses about 400MB
+    $ bin/fly-sidekiq scale count 3 # or your desired number of Sidekiq VMs
+    $ bin/fly-sidekiq deploy
+    ```
+1. Remove Sidekiq from your main VMs by setting `OVERMIND_FORMATION = "sidekiq=0"` in `fly.toml`.
+    ```
+    $ fly scale memory 512 # a single puma process + node uses about 430MB
+    $ fly scale count 3 # or your desired number of web VMs
+    $ fly deploy
+    ```
+
+Don't forget to adjust the number of Puma and Sidekiq threads, as described in [A bigger VM](#bigger-vm) above, to match your CPU and memory settings!
+
+Finally, make sure that your Postgres is big enough to successfully handle one connection for every thread in Pumo or Sidekiq across all VMs. If your postgres is unable to accept more connections, you might need to increase the CPU or memory on your Postgres VM(s), or you might need to add pg_bouncer to act as a connection proxy and reduce the number of open connections directly to the database.

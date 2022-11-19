@@ -1,0 +1,2 @@
+#!/bin/sh
+exec "fly" -c fly.sidekiq.toml "$@"
