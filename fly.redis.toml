@@ -1,4 +1,7 @@
-app = "mastodon-redis"
+app = "mastodon-example-redis"
+
+[build]
+  dockerfile = "Dockerfile.redis"
 
 [[mounts]]
   source = "mastodon_redis"

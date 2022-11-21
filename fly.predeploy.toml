@@ -1,0 +1,16 @@
+app = "mastodon-example-predeploy"
+
+[experimental]
+  # Just in case the VM does somehow start, don't try to run a server
+  cmd = ["sleep", "1000"]
+
+[deploy]
+  release_command = "bin/rails db:migrate"
+
+[env]
+  SKIP_POST_DEPLOYMENT_MIGRATIONS = "true"
+  MALLOC_ARENA_MAX = "2"
+  RAILS_ENV = "production"
+  RAILS_LOG_TO_STDOUT = "enabled"
+  REDIS_HOST = "mastodon-example-redis.internal"
+  REDIS_PORT = "6379"
