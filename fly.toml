@@ -55,6 +55,7 @@ kill_timeout = 5
   url_prefix = "/"
 
 [[services]]
+  processes = ["rails"]
   internal_port = 8080
   protocol = "tcp"
 
