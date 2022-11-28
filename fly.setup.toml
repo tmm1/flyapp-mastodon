@@ -1,7 +1,7 @@
 app = "mastodon-example"
 
 [deploy]
-  release_command = "bundle exec rails db:schema:load"
+  release_command = "bundle exec rails db:schema:load db:seed"
 
 [env]
   RAILS_ENV = "production"
