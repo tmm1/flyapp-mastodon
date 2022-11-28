@@ -45,10 +45,10 @@ kill_timeout = 5
 #   rails = "./overmind start -x sidekiq"
 #   # If you need to run more sidekiq workers, scale up this group
 #   # by running `fly scale count N --group sidekiq`
-#   sidekiq = "bash -c 'bundle exec sidekiq -c $MAX_THREADS -q default,2 -q pull,2 mailer,1 push,1'"
+#   sidekiq = "bash -c 'bundle exec sidekiq -c $MAX_THREADS -q default,1 -q pull,1 -q mailer,1 -q push,1'"
 #   # The schedule queue can only ever have one worker process at a time
 #   # by running fly scale count 1 --group schedule
-#   schedule = "bash -c 'bundle exec sidekiq -c $MAX_THREADS -q schedule,2 mailer,1 push,1'"
+#   schedule = "bash -c 'bundle exec sidekiq -c $MAX_THREADS -q schedule,1 -q default,1 -q pull,1 -q mailer,1 -q push,1'"
 
 [[statics]]
   guest_path = "/opt/mastodon/public"
