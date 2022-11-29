@@ -45,7 +45,7 @@ kill_timeout = 5
 #   rails = "./overmind start -x sidekiq"
 #   # If you need to run more sidekiq workers, scale up this group
 #   # by running `fly scale count N --group sidekiq`
-#   sidekiq = "bash -c 'bundle exec sidekiq -c $MAX_THREADS -q default,8 -q push,6 -q ingress,4 -q mailers,2 -q pull"
+#   sidekiq = "bash -c 'bundle exec sidekiq -c $MAX_THREADS -q default,8 -q push,6 -q ingress,4 -q mailers,2 -q pull'"
 #   # The schedule queue can only ever have one worker process at a time
 #   # by running fly scale count 1 --group schedule
 #   schedule = "bash -c 'bundle exec sidekiq -c $MAX_THREADS'"
