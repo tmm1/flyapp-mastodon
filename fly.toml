@@ -39,6 +39,7 @@ kill_timeout = 5
 ## If you uncomment this to scale up to more VMs,
 ##   - Remove the entire [mounts] section above
 ##   - Remove the OVERMIND_FORMATION env line above
+##   - Uncomment `processes = ["rails"]` below in [[services]]
 # [processes]
 #   # If you need more web server workers, scale up this group
 #   # by running `fly scale count rails=N
@@ -55,7 +56,7 @@ kill_timeout = 5
   url_prefix = "/"
 
 [[services]]
-  processes = ["rails"]
+  # processes = ["rails"]
   internal_port = 8080
   protocol = "tcp"
 
