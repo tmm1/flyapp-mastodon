@@ -1,4 +1,4 @@
-FROM tootsuite/mastodon:v4.0.1
+FROM tootsuite/mastodon:v4.1.0
 
 USER root
 RUN mkdir -p /var/cache/apt/archives/partial && \

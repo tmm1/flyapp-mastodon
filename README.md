@@ -72,7 +72,7 @@ fly deploy -c fly.setup.toml # run `rails db:schema:load`, may take 2-3 minutes
 
 ### Sending email
 
-Mastodon sends emails on signup, to confirm email addresses. It also uses emails for password resets, notifications to the server admins, and various other tasks. To have a fully-functioning Mastodon server, you'll need to create an account with an email service like [Postmark](https://postmarkapp.com/) or [Mailgun](https://www.mailgun.com/), get credentials, and provide those credentials to Mastodon as env vars or secrets. See [`fly.toml`](./fly.toml) for an example of the env vars you would set, and then provide your credentials as Fly secrets:
+Mastodon sends emails on sign-up, to confirm email addresses. It also uses emails for password resets, notifications to the server admins, and various other tasks. To have a fully-functioning Mastodon server, you'll need to create an account with an email service like [Postmark](https://postmarkapp.com/) or [Mailgun](https://www.mailgun.com/), get credentials, and provide those credentials to Mastodon as env vars or secrets. See [`fly.toml`](./fly.toml) for an example of the env vars you would set, and then provide your credentials as Fly secrets:
 
 ```bash
 fly secrets set SMTP_LOGIN=<public token> SMTP_PASSWORD=<secret token>
@@ -133,7 +133,7 @@ If your instance is getting slow or falling over, you may find [Scaling Mastodon
 
 ### Upgrading Mastodon
 
-To upgrade to a new version of Mastodon, change the version number on the first line of `Dockerfile`, and then check the release notes for upgrade instructions.
+To upgrade to a new version of Mastodon, change the version number on the first line of `Dockerfile`, and then check the [release notes](https://github.com/mastodon/mastodon/blob/main/CHANGELOG.md) for upgrade instructions.
 
 If there are migrations that need to be run, make sure that the release command in [`fly.toml`](./fly.toml) is uncommented.
 
