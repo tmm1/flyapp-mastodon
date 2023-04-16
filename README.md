@@ -8,9 +8,11 @@ While following this guide, you may find it helpful to also view the [Mastodon d
 
 ## Setup
 
+You'll need a [Fly.io](https://fly.io/) account, and the [Flyctl CLI](https://fly.io/docs/flyctl/installing/).
+
 ### App
 
-Fork this repo and clone a copy of it. Choose a name for your app that isn't already taken on [Fly.io](https://fly.io/), and run the script `bin/name YOURNAME`. Follow this readme from inside your repo, after you have run the script, so that all of the steps will be updated for the name of your Fly.io app.
+Fork this repo and clone a copy of it. Choose a name for your app that isn't already taken on https://fly.io/, and run the script `bin/name YOURNAME`. Follow this readme from inside your repo, after you have run the script, so that all of the steps will be updated for the name of your Fly.io app.
 
 ```bash
 fly apps create mastodon-example
