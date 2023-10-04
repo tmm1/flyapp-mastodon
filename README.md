@@ -158,7 +158,7 @@ fly deploy
 
 You should also regularly update the Postgres and Redis instances:
 
-- `flyctl image update -a mastodon-mountainash-db` to update Postgres
+- `flyctl image update -a mastodon-example-db` to update Postgres
 - `./bin/fly-redis deploy` to update Redis
 
 ### Scaling your instance
