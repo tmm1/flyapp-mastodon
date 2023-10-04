@@ -156,6 +156,11 @@ After that, just deploy the updated container as usual, and the post-deploy migr
 fly deploy
 ```
 
+You should also regularly update the Postgres and Redis instances:
+
+- `flyctl image update -a mastodon-mountainash-db` to update Postgres
+- `./bin/fly-redis deploy` to update Redis
+
 ### Scaling your instance
 
 If your instance attracts many users (or maybe a few users who follow a huge number of other accounts), you may notice things start to slow down, and you may run out of database, redis, or storage space.
