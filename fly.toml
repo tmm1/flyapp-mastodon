@@ -1,7 +1,8 @@
 app = "mastodon-example"
+primary_region = "sjc"
 
 kill_signal = "SIGINT"
-kill_timeout = 5
+kill_timeout = "5s"
 
 ## Uncomment if you are upgrading Mastodon. See README.md for details.
 # [deploy]
@@ -35,6 +36,7 @@ kill_timeout = 5
 [mounts]
   source = "mastodon_uploads"
   destination = "/opt/mastodon/public/system"
+  processes = ["app"]
 
 ## If you uncomment this to scale up to more VMs,
 ##   - Remove the entire [mounts] section above
@@ -68,15 +70,20 @@ kill_timeout = 5
     handlers = ["tls", "http"]
     port = 443
 
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 25
+    soft_limit = 20
+
   [[services.tcp_checks]]
     grace_period = "1s"
     interval = "15s"
-    restart_limit = 0
     timeout = "2s"
 
   [[services.http_checks]]
+    method = "get"
+    protocol = "http"
     path = "/health"
     grace_period = "1s"
     interval = "15s"
-    restart_limit = 0
     timeout = "2s"
