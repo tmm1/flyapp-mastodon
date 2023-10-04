@@ -65,6 +65,7 @@ kill_timeout = "5s"
   [[services.ports]]
     handlers = ["http"]
     port = 80
+    force_https = true
 
   [[services.ports]]
     handlers = ["tls", "http"]
@@ -79,6 +80,7 @@ kill_timeout = "5s"
     grace_period = "1s"
     interval = "15s"
     timeout = "2s"
+    tls_skip_verify = false
 
   [[services.http_checks]]
     method = "get"
