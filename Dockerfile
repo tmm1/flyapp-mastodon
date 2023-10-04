@@ -9,7 +9,7 @@ RUN mkdir -p /var/cache/apt/archives/partial && \
   apt-get install -y --no-install-recommends tmux
 
 # Releases: https://github.com/caddyserver/caddy/releases/
-RUN wget "https://github.com/caddyserver/caddy/releases/download/v2.6.4/caddy_2.6.4_linux_amd64.deb" -O caddy.deb && \
+RUN wget "https://github.com/caddyserver/caddy/releases/download/v2.7.4/caddy_2.7.4_linux_amd64.deb" -O caddy.deb && \
   dpkg -i caddy.deb
 
 USER mastodon
