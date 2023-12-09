@@ -1,7 +1,8 @@
 app = "mastodon-example"
+primary_region = "sjc"
 
 kill_signal = "SIGINT"
-kill_timeout = 5
+kill_timeout = "5s"
 
 ## Uncomment if you are upgrading Mastodon. See README.md for details.
 # [deploy]
@@ -18,6 +19,7 @@ kill_timeout = 5
   RAILS_SERVE_STATIC_FILES = "false"
   REDIS_HOST = "mastodon-example-redis.internal"
   REDIS_PORT = "6379"
+  REDIS_URL = "redis://mastodon-example-redis.internal:6379/?family=6"
   ## Storage on S3 also requires secrets named AWS_ACCESS_KEY_ID and 
   ## AWS_SECRET_ACCESS_KEY. If you use this, remove [mounts] below.
   # S3_ENABLED=true
@@ -35,6 +37,7 @@ kill_timeout = 5
 [mounts]
   source = "mastodon_uploads"
   destination = "/opt/mastodon/public/system"
+  processes = ["app"]
 
 ## If you uncomment this to scale up to more VMs,
 ##   - Remove the entire [mounts] section above
@@ -63,20 +66,27 @@ kill_timeout = 5
   [[services.ports]]
     handlers = ["http"]
     port = 80
+    force_https = true
 
   [[services.ports]]
     handlers = ["tls", "http"]
     port = 443
 
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 25
+    soft_limit = 20
+
   [[services.tcp_checks]]
     grace_period = "1s"
     interval = "15s"
-    restart_limit = 0
     timeout = "2s"
+    tls_skip_verify = false
 
   [[services.http_checks]]
+    method = "get"
+    protocol = "http"
     path = "/health"
     grace_period = "1s"
     interval = "15s"
-    restart_limit = 0
     timeout = "2s"
