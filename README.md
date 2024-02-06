@@ -16,7 +16,6 @@ Fork this repo and clone a copy of it. Choose a name for your app that isn't alr
 
 ```bash
 fly apps create mastodon-example
-fly scale memory 1024 # Rails + Sidekiq needs more than 512
 ```
 
 ### Secrets
@@ -36,8 +35,7 @@ Choose a region that is close to your users. See [Fly regions](https://fly.io/do
 
 ```bash
 fly apps create mastodon-example-redis
-bin/fly-redis volumes create --region sjc --size 1 mastodon_redis
-bin/fly-redis deploy
+fly redis create --region sjc --name mastodon_redis
 ```
 
 ### Storage (user uploaded photos and videos)
@@ -111,6 +109,7 @@ fly secrets set SMTP_LOGIN=<public token> SMTP_PASSWORD=<secret token>
 
 ```bash
 fly deploy
+fly scale memory 1024 # Rails + Sidekiq needs more than 512
 ```
 
 ### Make yourself an instance admin
