@@ -1,5 +1,5 @@
 # Releases: https://github.com/mastodon/mastodon/pkgs/container/mastodon
-FROM ghcr.io/mastodon/mastodon:v4.2.7
+FROM ghcr.io/mastodon/mastodon:v4.2.8
 
 USER root
 
